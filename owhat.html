@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+	<head>
+        <meta charset="utf-8" name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Owhat</title>
+        <script src="https://cdn.bootcdn.net/ajax/libs/echarts/4.8.0/echarts.js"></script>
+        <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.js"></script>
+
+	</head>
+	<body>
+
+       <div id="main" style="width:1500px;height:1000px"> </div>
+
+    <script>
+     // var owData = [];
+      var x = 30; //seconds interval
+      var times = []; // time array
+      var tt = 0; // start time
+
+      //loop to increment the time and push results in array
+      for (var i=0;tt<7.25*60*60; i++) {
+        var hh = 17+ Math.floor(tt/3600); // getting hours of day in 0-24 format
+        var mm = Math.floor((tt%3600)/60); // getting minutes of the hour in 0-55 format
+        var ss = ((tt%3600)%60); // getting minutes of the hour in 0-55 format
+        times[i] = ("0" + hh).slice(-2) + ':' + ("0" + mm).slice(-2) + ':' + ("0" +ss).slice(-2); // pushing data in array in [00:00 - 12:00 AM/PM format]
+        tt = tt + x;
+      }
+
+      function updateCharts() {
+
+          // 指定图表的配置项和数据
+            option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    trigger: 'axis',
+                    axisPointer: {
+                        type: 'cross',
+                        label: {
+                            backgroundColor: '#6a7985'
+                        }
+                    }
+                },
+                legend: {
+                    data: []
+                },
+                toolbox: {
+                    //feature: {
+                    //    saveAsImage: {},
+                    //    magicType: {
+                    //        type: ['line', 'bar', 'stack', 'tiled']
+                    //    }
+                    //}
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '3%',
+                    containLabel: true
+                },
+                xAxis: [
+                    {
+                        type: 'category',
+                        boundaryGap: false,
+                        axisLabel: {
+                          rotate: 30,
+                          interval: 19
+                        },
+                        data: times
+                    }
+                ],
+                yAxis: [
+                    {
+                        min: 0,
+                        max: 200000,
+                        splitNumber : 20,
+                        type: 'value'
+                    }
+                ],
+                series: []
+            };
+
+            $.ajax({
+              'async': false,
+              'global': false,
+              'url': "https://customstorage.oss-cn-hangzhou.aliyuncs.com/ow/battle-2020-08-02.json",
+              //'dataType': "json",
+              'success': function (data) {
+                   owData = JSON.parse(data);
+                   if (owData.length == 0) {
+                       return;
+                   }
+                    for (i=0; i<owData[0].length; i++) {
+                        option.legend.data.push(owData[0][i]['price'].toString() + "元");
+
+                        var seriesData = [];
+                        for (j=0; j<owData.length; j++) {
+                            seriesData.push(owData[j][i]['amount']);
+                         }
+
+                         option.series.push({
+                                name: owData[0][i]['price'].toString() + "元",
+                                type: 'line',
+                                stack: '总量',
+                                areaStyle: {},
+                                data: seriesData
+                         });
+
+                     };
+
+                    //for (i=0; i<owData.length; i++) {
+                    //    option.xAxis[0].data.push(owData[i][0]['current_time']);
+                    //};
+                },
+                'error': function (xhr, status, error) {
+                     var errorMessage = xhr.status + ': ' + xhr.statusText
+                     console('Error - ' + errorMessage);
+                }
+             });
+            
+
+                var myChart = echarts.init(document.getElementById("main"), "light");
+                var app = {};
+
+                if (option && typeof option === "object") {
+                    myChart.setOption(option, true);
+                    myChart.setOption({
+                        backgroundColor: 'rgba(128, 128, 128, 0.1)'
+                    })
+                }
+          setTimeout(updateCharts, 20000);
+      }
+
+    
+     updateCharts();
+
+    </script>
+	</body>
+</html>
