@@ -17,7 +17,7 @@
       var tt = 0; // start time
 
       //loop to increment the time and push results in array
-      for (var i=0;tt<7.25*60*60; i++) {
+      for (var i=0;tt<7*60*60; i++) {
         var hh = 17+ Math.floor(tt/3600); // getting hours of day in 0-24 format
         var mm = Math.floor((tt%3600)/60); // getting minutes of the hour in 0-55 format
         var ss = ((tt%3600)%60); // getting minutes of the hour in 0-55 format
@@ -72,7 +72,7 @@
                 yAxis: [
                     {
                         min: 0,
-                        max: 1000000,
+                        max: 800000,
                         splitNumber : 20,
                         type: 'value'
                     }
@@ -83,7 +83,7 @@
             $.ajax({
               'async': false,
               'global': false,
-              'url': "https://customstorage.oss-cn-hangzhou.aliyuncs.com/taoba/battle-2020-08-02.json",
+              'url': "https://customstorage.oss-cn-hangzhou.aliyuncs.com/taoba/battle-2020-08-08.json",
               //'dataType': "json",
               'success': function (data) {
                    taobaData = JSON.parse(data);
