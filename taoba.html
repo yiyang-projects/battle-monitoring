@@ -17,8 +17,8 @@
       var tt = 0; // start time
 
       //loop to increment the time and push results in array
-      for (var i=0;tt<7*60*60; i++) {
-        var hh = 17+ Math.floor(tt/3600); // getting hours of day in 0-24 format
+      for (var i=0;tt<5.25*60*60; i++) {
+        var hh = 19+ Math.floor(tt/3600); // getting hours of day in 0-24 format
         var mm = Math.floor((tt%3600)/60); // getting minutes of the hour in 0-55 format
         var ss = ((tt%3600)%60); // getting minutes of the hour in 0-55 format
         times[i] = ("0" + hh).slice(-2) + ':' + ("0" + mm).slice(-2) + ':' + ("0" +ss).slice(-2); // pushing data in array in [00:00 - 12:00 AM/PM format]
@@ -83,7 +83,7 @@
             $.ajax({
               'async': false,
               'global': false,
-              'url': "https://customstorage.oss-cn-hangzhou.aliyuncs.com/taoba/battle-2020-08-08.json",
+              'url': "https://customstorage.oss-cn-hangzhou.aliyuncs.com/taoba/battle-2020-08-17.json",
               //'dataType': "json",
               'success': function (data) {
                    taobaData = JSON.parse(data);
